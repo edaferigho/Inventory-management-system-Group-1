@@ -74,4 +74,3 @@ exports.updateDetails = async (req, res) => {
         message:'User details Updated Successfully!'
     })
 }
-
