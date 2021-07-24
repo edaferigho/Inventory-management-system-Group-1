@@ -1,5 +1,5 @@
 const { response } = require('express');
-const userModel = require('../model/userModel');
+const User = require('../model/userModel');
 const utils = require('../utils/utils')
 
 exports.signUp = async (req, res) => {
@@ -11,7 +11,7 @@ exports.signUp = async (req, res) => {
         if (correctPassword) {
             password = await utils.hashPassword(correctPassword)
             user.password = password;
-            const response = await userModel.addUser(user)
+            const response = await User.addUser(user)
             res.status(201).json({
                 message: 'User Account Creation Successful!',
                 
@@ -35,7 +35,7 @@ exports.signUp = async (req, res) => {
 }
 exports.login= async (req, res) => {
     let { email, password } = req.body;
-    const user = await userModel.getUser(email);
+    const user = await User.getUser(email);
     if (!user) {
         res.status(404).json({
             status: ' Login failed!',
@@ -65,10 +65,10 @@ exports.updateDetails = async (req, res) => {
     let data = req.body;
     if (data.password !== undefined) {
         data.password = await utils.hashPassword(data.password)
-        user = await userModel.updateUser(id,data)
+        user = await User.updateUser(id,data)
     }
     else {
-        user = await userModel.updateUser(id,data)
+        user = await User.updateUser(id,data)
     }
     res.status(200).json({
         message:'User details Updated Successfully!'
