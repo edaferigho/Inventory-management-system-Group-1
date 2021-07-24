@@ -11,6 +11,16 @@ const userSchema = mongoose.Schema({
 
 const Users = mongoose.model('Users', userSchema)
 
+exports.getAllUsers = async () => {
+    let users;
+    try {
+        users = await Users.find({})
+    } catch (error) {
+        console.error(error);
+    }
+    return users;
+}
+
 exports.addUser = async (user) => {
     let response
     try {
@@ -39,4 +49,13 @@ exports.getUser = async(email) => {
         
     }
     return user;
+}
+exports.findUserById = async (id) => {
+    let user;
+    try {
+        user = await Users.findById(id)
+    } catch (error) {
+        console.error(error);
+    }
+    return user
 }
