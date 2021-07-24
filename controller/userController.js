@@ -75,7 +75,3 @@ exports.updateDetails = async (req, res) => {
     })
 }
 
-exports.getAllUsers = async (req, res) => {
-    const users = await User.getAllUsers()
-    res.json(users)
-}

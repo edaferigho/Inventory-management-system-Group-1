@@ -6,8 +6,7 @@ const Router = express.Router();
 
 Router.use(express.urlencoded({ extended: true }))
 Router.use(express.json())
-Router.get('/',auth,userController.getAllUsers)
-Router.post('/',auth,userController.signUp)
+Router.post('/',userController.signUp)
 Router.post('/login', userController.login)
 Router.put('/:id',userController.updateDetails)
 
