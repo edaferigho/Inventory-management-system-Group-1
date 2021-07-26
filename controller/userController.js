@@ -1,5 +1,6 @@
 const { response } = require('express');
 const User = require('../model/userModel');
+const Product = require('../model/productModel')
 const utils = require('../utils/utils')
 
 exports.signUp = async (req, res) => {
@@ -13,7 +14,7 @@ exports.signUp = async (req, res) => {
             user.password = password;
             const response = await User.addUser(user)
             res.status(201).json({
-                message: 'User Account Creation Successful!',
+                message: `User account created successfully with the id: ${response._id}`,
                 
             })
          }
@@ -59,8 +60,16 @@ exports.login= async (req, res) => {
         }
     }
 }
+exports.getUser = (req, res) => {
+    const user = req.user;
+    res.redirect(301,req.originalUrl+'/'+user._id)
+}
+exports.getUserDetails = async (req, res) => {
+    const user = req.user
+    res.status(200).json(user)
+}
 exports.updateDetails = async (req, res) => {
-    const id = req.params.id
+    const id = req.user.id
     let user
     let data = req.body;
     if (data.password !== undefined) {
@@ -70,8 +79,15 @@ exports.updateDetails = async (req, res) => {
     else {
         user = await User.updateUser(id,data)
     }
-    res.status(200).json({
-        message:'User details Updated Successfully!'
-    })
+    if (user) {
+        res.status(200).json({
+            message: 'User details Updated Successfully!'
+        })
+    }
+    else {utils.sendNotFoundError(res,'User')}
+    
 }
+
+
+
 

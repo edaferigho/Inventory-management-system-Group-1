@@ -5,8 +5,7 @@ const userSchema = mongoose.Schema({
     firstName: { type: String, required: true },
     lastName: { type: String, required: false },
     email: { type: String, required: true },
-    password: { type: String, required: true },
-    cars: {type:mongoose.Schema.Types.ObjectId,ref:'Cars'},
+    password: { type: String, required: true }
 });
 
 const Users = mongoose.model('Users', userSchema)
@@ -27,7 +26,7 @@ exports.updateUser = async (id,update) => {
     try {
         response = Users.findByIdAndUpdate(id,{...update})
     } catch (error) {
-        log(error)
+        console.log(error)
     }
     return response
 }
