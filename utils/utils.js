@@ -18,7 +18,7 @@ exports.hashPassword = async (password) => {
 exports.emailExist = async (email) => {
     let found
     try {
-         found = userModel.getUser(email)
+         found = await userModel.getUser(email)
     } catch (error) {
         console.error(error);
     }

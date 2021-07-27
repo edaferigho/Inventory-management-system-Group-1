@@ -7,7 +7,8 @@ exports.signUp = async (req, res) => {
     const body = req.body;
     let user = { firstName, lastName, email, password } = body;
     const confirmPassword = body.confirmPassword
-    if (await utils.emailExist(email)) {
+    
+    if (!await utils.emailExist(email)) {
         const correctPassword = utils.getCorrectPassword(password,confirmPassword)
         if (correctPassword) {
             password = await utils.hashPassword(correctPassword)
