@@ -80,6 +80,8 @@ exports.login = async (req, res, next) => {
     }
     next()
 }
+
+
 exports.getUser = (req, res) => {
     const user = req.user;
     res.redirect(301, req.originalUrl + '/' + user._id)
@@ -104,51 +106,64 @@ exports.getUserDetails = async (req, res) => {
 
 exports.updateDetails = async (req, res, next) => {
     const id = req.user.id
-    let user
-    let data = req.body;
-    if (data.password !== undefined) {
 
-        // Hashing password before updating if it exists
-        data.password = await utils.hashPassword(data.password)
-        user = await User.updateUser(id, data)
-    } else {
-        user = await User.updateUser(id, data)
-    }
+    // let data = {firstName, lastName, email, password} = body;
+
+
+    let user = await User.updateUser(id, req.body)
+
     if (user) {
-        res.status(200).json({
-            message: 'User details Updated Successfully!'
-        })
+
+        let returnedDetails = {firstName, lastName, email}
+
+        responseInfo.status = "success";
+        responseInfo.message = "Congratulations! Your details have been updated successfully."
+        responseInfo.data = returnedDetails
+
+        res.send(responseInfo).statusCode(200)
     } else {
-        utils.sendNotFoundError(res, 'User')
+
+        responseInfo.status = "error";
+        responseInfo.message = "Sorry! Could not update your details. Please try again."
+
+        res.send(responseInfo)
     }
 
     next()
 }
 
 exports.modifyPassword = async (req, res, next) => {
-    // TODO: doesn't get id from the user request object.
     const id = req.user.id
 
     let user
-    let {newpassword, confirmpassword} = data = req.body;
+    let {oldpassword, newpassword, confirmpassword} = data = req.body;
 
-    // TODO: Check whether old password matches the new password.
     if (utils.isPasswordMatch(newpassword, confirmpassword)) {
+        let queryUser = await User.findUserById(id);
+        let dbOldPassword = queryUser.password;
 
-        // Hashing password before updating it.
-        let hashedPassword = await utils.hashPassword(newpassword)
-        let updatePassword = await Users.Users.findByIdAndUpdate(id, {password: hashedPassword})
 
-        if (updatePassword) {
+        if (await utils.isCorrectPassword(oldpassword, dbOldPassword)) {
 
-            responseInfo.status = "success";
-            responseInfo.message = "Congratulations! Your password has been modified successfully."
+            let hashedPassword = await utils.hashPassword(newpassword)
+            let updatePassword = await Users.Users.findByIdAndUpdate(id, {password: hashedPassword})
 
-            res.send(responseInfo)
+            if (updatePassword) {
+
+                responseInfo.status = "success";
+                responseInfo.message = "Congratulations! Your password has been modified successfully."
+
+                res.send(responseInfo)
+            } else {
+
+                responseInfo.status = "error";
+                responseInfo.message = "Sorry! Your password could not be modified. Please try again."
+
+                res.send(responseInfo)
+            }
         } else {
-
             responseInfo.status = "error";
-            responseInfo.message = "Sorry! Your password could not be modified. Please try again."
+            responseInfo.message = "Sorry! Your old password is incorrect. Please try again."
 
             res.send(responseInfo)
         }

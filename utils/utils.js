@@ -10,7 +10,7 @@ exports.isPasswordMatch = function (password, confirmPassword) {
     return password === confirmPassword;
 }
 
-// TODO: Fetch and compare password
+
 exports.isPasswordMatchDBPassword = async (userid, password, dbpassword) => {
     let response;
     try {
