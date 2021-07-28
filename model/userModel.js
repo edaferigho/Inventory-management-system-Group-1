@@ -2,41 +2,38 @@ const mongoose = require('./db/database')
 
 
 const userSchema = mongoose.Schema({
-    firstName: { type: String, required: true },
-    lastName: { type: String, required: false },
-    email: { type: String, required: true },
-    password: { type: String, required: true }
-});
+    firstName: {type: String, required: true},
+    lastName: {type: String, required: false},
+    email: {type: String, required: true},
+    password: {type: String, required: true}
+}, {versionKey: false});
 
 const Users = mongoose.model('Users', userSchema)
-
 
 exports.addUser = async (user) => {
     let response
     try {
-         response = await Users.create({...user})
-    }
-    catch(error) {
+        response = await Users.create({...user})
+    } catch (error) {
         console.log(error);
     }
     return response;
 }
-exports.updateUser = async (id,update) => {
+exports.updateUser = async (id, update) => {
     let response
     try {
-        response = Users.findByIdAndUpdate(id,{...update})
+        response = Users.findByIdAndUpdate(id, {...update})
     } catch (error) {
         console.log(error)
     }
     return response
 }
-exports.getUser = async(email) => {
+exports.getUser = async (email) => {
     let user;
     try {
-        user =await Users.findOne({email})
-    }
-    catch (error) {
-        
+        user = await Users.findOne({email})
+    } catch (error) {
+
     }
     return user;
 }
@@ -49,3 +46,16 @@ exports.findUserById = async (id) => {
     }
     return user
 }
+
+// Fetches all users
+exports.fetchAllUsers = async () => {
+    let user1 = null;
+    try {
+        user1 = await Users.find({});
+    } catch (err) {
+        console.error(err);
+    }
+    return user1;
+}
+
+exports.Users = {Users:Users}

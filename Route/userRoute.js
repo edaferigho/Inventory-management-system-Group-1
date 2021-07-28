@@ -3,14 +3,30 @@ const userController = require('../controller/userController');
 const auth = require('../middleware/authController')
 
 const Router = express.Router();
-
-Router.use(express.urlencoded({ extended: true }))
+Router.use(express.urlencoded({extended: true}))
 Router.use(express.json())
-Router.get('/user/:id', auth, userController.getUserDetails)
-Router.get('/user', auth, userController.getUser)
-Router.post('/signup',userController.signUp)
-Router.post('/login', userController.login)
-Router.put('/user',auth, userController.updateDetails)
 
+const responseInfo = {
+    status: "",
+    message: ""
+}
+
+
+
+Router.all('/', (req, res) => {
+    res.send("Welcome to user route")
+})
+
+Router.get("/all-users/", userController.getAllUsers)
+
+Router.post('/signup', userController.signUp) // - Signup
+
+Router.post('/signin/', userController.login) // - Login
+
+Router.get('/user', auth, userController.getUserDetails) // - Fetch currently signed in user details
+
+Router.put('/user/update/', auth, userController.updateDetails)  // - Update
+
+Router.put('/user/modify-password/', auth, userController.modifyPassword)  // - Modify Password
 
 module.exports = Router;

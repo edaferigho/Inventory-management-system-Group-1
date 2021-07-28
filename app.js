@@ -1,15 +1,33 @@
 require('dotenv').config()
 const express = require('express');
+const app = express();
 const userRoute = require('./Route/userRoute')
 const productRoute = require('./Route/productRoute')
 
+const responseInfo = {
+    status: "",
+    message: ""
+}
 
-const app = express();
-
-
-app.use('/', userRoute)
-app.use('/products', productRoute)
 PORT = process.env.PORT;
+
+// Default route handler
+app.get("/", (req, res) => {
+    res.send("Welcome to Group 1 Inventory Management System");
+})
+
+app.use('/users/', userRoute)
+
+app.use('/products', productRoute)
+
+
+app.all("*", (req, res) => {
+    responseInfo.status = "error";
+    responseInfo.message = "Sorry! You are not authorized to access this route."
+
+    res.send(responseInfo)
+})
+
 app.listen(PORT, () => {
     console.log(`Server running at 127.0.0.1:${PORT}`);
 })

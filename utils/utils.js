@@ -6,41 +6,61 @@ exports.getCorrectPassword = function (password, confirmPassword) {
     return password === confirmPassword ? password : null;
 }
 
-exports.hashPassword = async (password) => {
-    let hashedPassword;
-   try {
-        hashedPassword = await bcrypt.hash(password, 12)
-   } catch (error) {
-       console.error(error);
-   }
-    return hashedPassword
+exports.isPasswordMatch = function (password, confirmPassword) {
+    return password === confirmPassword;
 }
-exports.emailExist = async (email) => {
-    let found
+
+// TODO: Fetch and compare password
+exports.isPasswordMatchDBPassword = async (userid, password, dbpassword) => {
+    let response;
     try {
-         found = await userModel.getUser(email)
+        response = await bcrypt.compare(password, dbpassword)
     } catch (error) {
         console.error(error);
     }
-    return found?true:false
+
+    return response;
 }
-exports.isCorrectPassword = async (password, orignalPassword) => {
-    let response;
+
+exports.hashPassword = async (password) => {
+    let hashedPassword;
     try {
-         response = await bcrypt.compare(password,orignalPassword)
-    }
-    catch (error) {
+        hashedPassword = await bcrypt.hash(password, 12)
+    } catch (error) {
         console.error(error);
     }
-    return response;
 
+    return hashedPassword
 }
- exports.genUserToken = async (userid) => {
-     const token = await jwt.sign({userid}, process.env.SECRET,{expiresIn:process.env.JWT_EXPIRES_IN})
-     return token
+
+exports.emailExist = async (email) => {
+    let found
+    try {
+        found = await userModel.getUser(email)
+    } catch (error) {
+        console.error(error);
+    }
+
+    return found ? true : false
 }
-exports.sendNotFoundError = (outputHandler,sender) => {
-      outputHandler.status(404).json({
-            status: 'Failed!',
-        message:`${sender} not found!`})
- }
+
+exports.isCorrectPassword = async (password, originalPassword) => {
+    let response;
+    try {
+        response = await bcrypt.compare(password, originalPassword)
+    } catch (error) {
+        console.error(error);
+    }
+
+    return response;
+}
+
+exports.genUserToken = async (userid) => {
+    return await jwt.sign({userid}, process.env.SECRET, {expiresIn: process.env.JWT_EXPIRES_IN})
+}
+exports.sendNotFoundError = (outputHandler, sender) => {
+    outputHandler.status(404).json({
+        status: 'Failed!',
+        message: `${sender} not found!`
+    })
+}
