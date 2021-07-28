@@ -107,18 +107,19 @@ exports.getUserDetails = async (req, res) => {
 exports.updateDetails = async (req, res, next) => {
     const id = req.user.id
 
-    // let data = {firstName, lastName, email, password} = body;
-
+    let newUserDetails = {
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        email: req.body.email
+    };
 
     let user = await User.updateUser(id, req.body)
 
     if (user) {
 
-        let returnedDetails = {firstName, lastName, email}
-
         responseInfo.status = "success";
         responseInfo.message = "Congratulations! Your details have been updated successfully."
-        responseInfo.data = returnedDetails
+        responseInfo.data = newUserDetails
 
         res.send(responseInfo).statusCode(200)
     } else {
@@ -152,6 +153,7 @@ exports.modifyPassword = async (req, res, next) => {
 
                 responseInfo.status = "success";
                 responseInfo.message = "Congratulations! Your password has been modified successfully."
+                delete  responseInfo.data
 
                 res.send(responseInfo)
             } else {
