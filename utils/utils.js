@@ -1,25 +1,10 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const userModel = require('../model/userModel')
+const multer = require('multer')
 
 exports.getCorrectPassword = function (password, confirmPassword) {
     return password === confirmPassword ? password : null;
-}
-
-exports.isPasswordMatch = function (password, confirmPassword) {
-    return password === confirmPassword;
-}
-
-
-exports.isPasswordMatchDBPassword = async (userid, password, dbpassword) => {
-    let response;
-    try {
-        response = await bcrypt.compare(password, dbpassword)
-    } catch (error) {
-        console.error(error);
-    }
-
-    return response;
 }
 
 exports.hashPassword = async (password) => {
@@ -32,7 +17,6 @@ exports.hashPassword = async (password) => {
 
     return hashedPassword
 }
-
 exports.emailExist = async (email) => {
     let found
     try {
@@ -63,4 +47,28 @@ exports.sendNotFoundError = (outputHandler, sender) => {
         status: 'Failed!',
         message: `${sender} not found!`
     })
+}
+
+exports.fileStorageEngine = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, './uploads')
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + '--' + file.originalname)
+    }
+})
+
+exports.isPasswordMatch = function (password, confirmPassword) {
+    return password === confirmPassword;
+}
+
+exports.isPasswordMatchDBPassword = async (userid, password, dbpassword) => {
+    let response;
+    try {
+        response = await bcrypt.compare(password, dbpassword)
+    } catch (error) {
+        console.error(error);
+    }
+
+    return response;
 }

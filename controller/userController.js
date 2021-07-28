@@ -6,7 +6,7 @@ const responseInfo = {
     status: "",
     message: ""
 }
-
+ 
 exports.signUp = async (req, res) => {
     const body = req.body;
     let user = {firstName, lastName, email, password} = body;

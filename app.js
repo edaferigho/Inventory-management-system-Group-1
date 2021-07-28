@@ -16,9 +16,11 @@ app.get("/", (req, res) => {
     res.send("Welcome to Group 1 Inventory Management System");
 })
 
+// User Route Handler
 app.use('/users/', userRoute)
 
-app.use('/products', productRoute)
+// Product Route Handler
+app.use('/products/', productRoute)
 
 
 app.all("*", (req, res) => {
