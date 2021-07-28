@@ -119,7 +119,6 @@ exports.updateDetails = async (req, res, next) => {
 
         responseInfo.status = "success";
         responseInfo.message = "Congratulations! Your details have been updated successfully."
-        responseInfo.data = newUserDetails
 
         res.send(responseInfo).statusCode(200)
     } else {
@@ -143,7 +142,6 @@ exports.modifyPassword = async (req, res, next) => {
         let queryUser = await User.findUserById(id);
         let dbOldPassword = queryUser.password;
 
-
         if (await utils.isCorrectPassword(oldpassword, dbOldPassword)) {
 
             let hashedPassword = await utils.hashPassword(newpassword)
@@ -153,7 +151,6 @@ exports.modifyPassword = async (req, res, next) => {
 
                 responseInfo.status = "success";
                 responseInfo.message = "Congratulations! Your password has been modified successfully."
-                delete  responseInfo.data
 
                 res.send(responseInfo)
             } else {
