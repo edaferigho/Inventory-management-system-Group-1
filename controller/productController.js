@@ -1,6 +1,11 @@
 const Product = require('../model/productModel');
 const utils = require('../utils/utils')
 
+const responseInfo = {
+    status: "",
+    message: ""
+}
+
 // This returns all products for the current user
 exports.getProducts = async (req, res) => {
     try {
@@ -20,7 +25,8 @@ exports.getProduct = async (req, res) => {
         const product = await Product.find({userid: userid, _id: productId})
         if (product) {
             res.status(200).json({
-                status: 'Success!', product
+                status: 'Success!',
+                product
             })
         } else {
             utils.sendNotFoundError(res, 'Product')
@@ -35,13 +41,28 @@ exports.getProduct = async (req, res) => {
 // This adds products
 exports.addProduct = async (req, res) => {
     // TODO: Destructure all product's fields and perform validation on them
+
+
     try {
+        let user = req.user;
         let product = req.body
         product.imageURL = req.file.filename
-        let user = req.user;
         product.userid = user._id;
+
         let response = await Product.create({...product})
-        res.status(201).json(`Product with id: ${response._id} added successfully`)
+        if(response){
+
+            productId = response._id
+            responseInfo.status = "success"
+            responseInfo.message = "Product added successfully"
+            responseInfo.data = response
+            res.send(responseInfo)
+        }
+        else {
+            res.send(`Product could not be added to the database`)
+        }
+
+
     } catch (error) {
         console.error(error)
     }

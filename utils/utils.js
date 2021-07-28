@@ -50,9 +50,7 @@ exports.sendNotFoundError = (outputHandler, sender) => {
 }
 
 exports.fileStorageEngine = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, './uploads')
-    },
+    destination: "./uploads/products-images/",
     filename: (req, file, cb) => {
         cb(null, Date.now() + '--' + file.originalname)
     }

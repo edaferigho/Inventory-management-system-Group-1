@@ -22,15 +22,15 @@ const productSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    RAM: {
+    ram: {
         type: String,
         required: true
     },
-    Storage: {
+    storage: {
         type: String,
         required: true
     },
-    OS: {
+    os: {
         type: String,
         required: true
     },
@@ -48,9 +48,10 @@ const productSchema = mongoose.Schema({
     },
     userid: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Users', required: true
+        ref: 'Users',
+        required: true
     }
-});
+}, {versionKey: false});
 
 const Product = mongoose.model('Products', productSchema)
 module.exports = Product
