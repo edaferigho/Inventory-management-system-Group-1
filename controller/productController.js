@@ -22,11 +22,11 @@ exports.getProduct = async (req, res) => {
     let userid = req.user._id
     const productId = req.params.id;
     try {
-        const product = await Product.find({userid: userid, _id: productId})
+        const product = await Product.findOne({userid: userid, _id: productId})
         if (product) {
             res.status(200).json({
                 status: 'Success!',
-                product
+                product: product
             })
         } else {
             utils.sendNotFoundError(res, 'Product')
@@ -42,7 +42,6 @@ exports.getProduct = async (req, res) => {
 exports.addProduct = async (req, res) => {
     // TODO: Destructure all product's fields and perform validation on them
 
-
     try {
         let user = req.user;
         let product = req.body
@@ -50,15 +49,14 @@ exports.addProduct = async (req, res) => {
         product.userid = user._id;
 
         let response = await Product.create({...product})
-        if(response){
+        if (response) {
 
             productId = response._id
             responseInfo.status = "success"
             responseInfo.message = "Product added successfully"
             responseInfo.data = response
             res.send(responseInfo)
-        }
-        else {
+        } else {
             res.send(`Product could not be added to the database`)
         }
 
@@ -67,6 +65,7 @@ exports.addProduct = async (req, res) => {
         console.error(error)
     }
 }
+
 exports.updateProduct = async (req, res) => {
     let productId = req.params.id;
     const update = req.body;
@@ -84,6 +83,7 @@ exports.updateProduct = async (req, res) => {
         console.error(error)
     }
 }
+
 exports.deleteProduct = async (req, res) => {
     let productId = req.params.id;
     try {

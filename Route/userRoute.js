@@ -28,4 +28,5 @@ Router.put('/user/update/', auth, userController.updateDetails)  // - Update
 
 Router.put('/user/modify-password/', auth, userController.modifyPassword)  // - Modify Password
 
+
 module.exports = Router;
