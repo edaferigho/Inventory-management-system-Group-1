@@ -6,41 +6,66 @@ const responseInfo = {
     message: ""
 }
 
-// This returns all products for the current user
+// Fetch All Product Of A Particular User
 exports.getProducts = async (req, res) => {
+
     try {
         let userid = req.user._id
         const products = await Product.find({userid})
-        res.json(products)
+
+        if (products) {
+            res.status(200).json({
+                status: 'success!',
+                data: products
+            })
+
+        } else {
+            responseInfo.status = "error"
+            responseInfo.message = `Sorry! Products not found.`
+
+            res.send(responseInfo).statusCode(404)
+        }
+
     } catch (error) {
-        console.log(error)
+        responseInfo.status = "error"
+        responseInfo.message = `Sorry! Something searching for product. Please try again.`
+
+        res.send(responseInfo)
     }
 
 }
-// This returns a particular product for a particular user
-exports.getProduct = async (req, res) => {
+
+// Fetch Single Product
+exports.getSingleProduct = async (req, res) => {
     let userid = req.user._id
-    const productId = req.params.id;
+    const productId = req.params.id
+
     try {
         const product = await Product.findOne({userid: userid, _id: productId})
         if (product) {
+
             res.status(200).json({
-                status: 'Success!',
-                product: product
+                status: 'success!',
+                data: product
             })
+
         } else {
-            utils.sendNotFoundError(res, 'Product')
+            responseInfo.status = "error"
+            responseInfo.message = `Sorry! Product not found.`
+
+            res.send(responseInfo).statusCode(404)
         }
     } catch (error) {
-        console.error(error)
+        responseInfo.status = "error"
+        responseInfo.message = `Sorry! Something searching for product. Please try again.`
+
+        res.send(responseInfo)
     }
 
 }
-//TODO: Properly arrange code in all files
 
-// This adds products
+// Add New Products
 exports.addProduct = async (req, res) => {
-    // TODO: Destructure all product's fields and perform validation on them
 
     try {
         let user = req.user;
@@ -50,55 +75,81 @@ exports.addProduct = async (req, res) => {
 
         let response = await Product.create({...product})
         if (response) {
-
-            productId = response._id
             responseInfo.status = "success"
             responseInfo.message = "Product added successfully"
             responseInfo.data = response
+
             res.send(responseInfo)
+
         } else {
-            res.send(`Product could not be added to the database`)
+            responseInfo.status = "error"
+            responseInfo.message = `Sorry! Product could not be added to the database. Please try again`
+
+            res.send(responseInfo)
         }
 
-
     } catch (error) {
-        console.error(error)
+        responseInfo.status = "error"
+        responseInfo.message = `Sorry! Something went wrong while add the product. Please try again`
+
+        res.send(responseInfo)
     }
 }
 
+// Update Product
 exports.updateProduct = async (req, res) => {
-    let productId = req.params.id;
-    const update = req.body;
+    let productId = req.params.id
+    const update = req.body
+
     try {
-        const response = await Product.findByIdAndUpdate(productId, {...update});
+        const response = await Product.findByIdAndUpdate(productId, {...update})
+
         if (response) {
-            res.status(200).json({
-                status: 'Success!',
-                message: `Product with id ${response._id} updated successfully!`
-            })
+            responseInfo.status = "success"
+            responseInfo.message = "Product updated successfully"
+            responseInfo.data = response
+
+            res.send(responseInfo)
+
         } else {
-            utils.sendNotFoundError(res, 'Product')
+            responseInfo.status = "error"
+            responseInfo.message = `Sorry! Could not update product at this time. Please try again`
+
+            res.send(responseInfo)
         }
+
     } catch (error) {
-        console.error(error)
+        responseInfo.status = "error"
+        responseInfo.message = `Sorry! Something went wrong while updating product details. Please try again`
+
+        res.send(responseInfo)
     }
 }
 
+// Delete Product
 exports.deleteProduct = async (req, res) => {
     let productId = req.params.id;
     try {
         const response = await Product.findByIdAndDelete(productId)
         if (response) {
-            res.status(200).json({
-                status: 'Success!',
-                message: 'Product deleted successfully!'
-            })
+
+            responseInfo.status = "success"
+            responseInfo.message = "Product updated successfully"
+            delete responseInfo.data
+
+            res.send(responseInfo)
         } else {
-            utils.sendNotFoundError(res, 'Product')
+
+            responseInfo.status = "error"
+            responseInfo.message = `Sorry! Could not delete product at this time. Please try again`
+
+            res.send(responseInfo)
         }
     } catch (error) {
-        console.error(error)
+
+        responseInfo.status = "error"
+        responseInfo.message = `Sorry! Something went wrong while deleting product. Please try again`
+
+        res.send(responseInfo)
     }
-
-
 }

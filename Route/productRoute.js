@@ -11,16 +11,15 @@ Router.use(express.urlencoded({extended: true}))
 Router.use(express.json())
 
 
-Router.get('/my-products/', auth, productController.getProducts)
+Router.get('/my-products/', auth, productController.getProducts) // Fetch current user products route handler
 
-Router.get('/product/:id', auth, productController.getProduct)
+Router.get('/product/:id', auth, productController.getSingleProduct) // Fetch single product route handler
 
-Router.post('/', auth, uploads.single('image'), productController.addProduct) // New product
+Router.post('/', auth, uploads.single('image'), productController.addProduct) // Add new product route handler
 
-// TODO: Modify request data gotten from the below handler to be multer format instead of req.body
-Router.put('/product/update/:id', auth, productController.updateProduct)
+Router.put('/product/update/:id', auth, productController.updateProduct) // Update product route handler
 
-Router.delete('/product/delete/:id', auth, productController.deleteProduct)
+Router.delete('/product/delete/:id', auth, productController.deleteProduct) // Delete product route handler
 
 
 module.exports = Router;

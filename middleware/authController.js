@@ -6,6 +6,12 @@ const responseInfo = {
     message: ""
 }
 
+/**
+ * @param req
+ * @param res
+ * @param next
+ * @returns {Object<User>}
+ */
 const auth = async (req, res, next) => {
     let token = req.headers.authorization;
 
@@ -18,7 +24,7 @@ const auth = async (req, res, next) => {
 
         responseInfo.status = "error";
         responseInfo.message = "Sorry! Invalid authorization token supplied.";
-        responseInfo.errordetails = error;
+
         res.send(responseInfo)
     }
 }

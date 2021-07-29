@@ -3,6 +3,7 @@ const express = require('express');
 const app = express();
 const userRoute = require('./Route/userRoute')
 const productRoute = require('./Route/productRoute')
+app.use(express.json())
 
 const responseInfo = {
     status: "",
