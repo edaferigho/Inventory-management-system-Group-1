@@ -26,7 +26,7 @@ app.use('/products/', productRoute)
 
 app.all("*", (req, res) => {
     responseInfo.status = "error";
-    responseInfo.message = "Sorry! You are not authorized to access this route."
+    responseInfo.message = "Sorry! You do not have authorization to access this route"
 
     res.send(responseInfo)
 })
