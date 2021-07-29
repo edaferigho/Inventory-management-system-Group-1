@@ -62,7 +62,7 @@ exports.getUser = async (email) => {
 /**
  * A function that fetches user details by ID
  * @param id
- * @returns {Promise<*>}
+ * @returns {Object<User>}
  */
 exports.findUserById = async (id) => {
     let user;
@@ -76,7 +76,7 @@ exports.findUserById = async (id) => {
 
 /**
  * A simple function that fetches all users in the database
- * @returns Array   - Returns an array of user objects
+ * @returns Array<User>   - Returns an array of user objects
  */
 exports.fetchAllUsers = async () => {
     let user1 = null;

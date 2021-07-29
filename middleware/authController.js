@@ -12,7 +12,7 @@ const responseInfo = {
  * @param req
  * @param res
  * @param next
- * @returns {void | error}
+ * @returns {Object<success> | Object<error>}
  */
 const auth = async (req, res, next) => {
     let token = req.headers.authorization;
