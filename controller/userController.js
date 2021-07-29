@@ -8,7 +8,9 @@ const responseInfo = {
 }
 
 /**
- * This function processes the user signup request
+ * This function handles the user signup request.
+ * It validates the user email, check for correct password match,
+ * hashes password and creates the user record
  * @param req
  * @param res
  * @returns {Object<User> | Object<error>}
@@ -31,7 +33,8 @@ exports.signUp = async (req, res) => {
             responseInfo.message = "Congratulation! Your account has been created successfully."
             responseInfo.data = {
                 id: response._id,
-                name: response.firstName + ' ' + response.lastName,
+                firstname: response.firstName,
+                lastname: response.lastName,
                 email: response.email
             }
 
@@ -45,7 +48,7 @@ exports.signUp = async (req, res) => {
         }
     } else {
         responseInfo.status = "error";
-        responseInfo.message = `Sorry! User witht he following email already exist: ${email}`
+        responseInfo.message = `Sorry! User with the following email already exist: ${email}`
 
         res.send(responseInfo)
     }
@@ -53,7 +56,8 @@ exports.signUp = async (req, res) => {
 }
 
 /**
- * This function handles the user sign in request
+ * This function handles the user sign in request.
+ * Generates a new JWT token for the user if successfully signed in
  * @param req
  * @param res
  * @param next
@@ -101,12 +105,27 @@ exports.getUser = (req, res) => {
     res.redirect(301, req.originalUrl + '/' + user._id)
 }
 
+/**
+ * The getAllUsers() function fetches the documents of
+ * all the users in the "users" collection
+ * @param req
+ * @param res
+ * @param next
+ * @returns {Object<Users>}
+ */
 exports.getAllUsers = async (req, res, next) => {
     res.send(await User.fetchAllUsers())
 
     next()
 }
 
+/**
+ * This function gets the details of the current signed-in
+ * user and return as response data
+ * @param req
+ * @param res
+ * @returns {Object<User>}
+ */
 exports.getUserDetails = async (req, res) => {
     const userInfo = {
         id: req.user.id,
@@ -119,11 +138,11 @@ exports.getUserDetails = async (req, res) => {
 }
 
 /**
- *
+ * The updateDetails() function updates the details of the current signed-in user
  * @param req
  * @param res
  * @param next
- * @returns {Promise<void>}
+ * @returns {Object<success> | Object<error>}
  */
 exports.updateDetails = async (req, res, next) => {
     const id = req.user.id
@@ -146,6 +165,15 @@ exports.updateDetails = async (req, res, next) => {
     next()
 }
 
+/**
+ * This function modifies the password of the signed-in user.
+ * It verifies that the provided old password matches the one on the database.
+ * It also checks for new password and confirm password match before updating the database password
+ * @param req
+ * @param res
+ * @param next
+ * @returns {Object<success> | Object<error>}
+ */
 exports.modifyPassword = async (req, res, next) => {
     const id = req.user.id
 
