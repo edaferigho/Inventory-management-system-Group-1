@@ -6,7 +6,13 @@ const responseInfo = {
     status: "",
     message: ""
 }
- 
+
+/**
+ * This function processes the user signup request
+ * @param req
+ * @param res
+ * @returns {Object<User> | Object<error>}
+ */
 exports.signUp = async (req, res) => {
     const body = req.body;
     let user = {firstName, lastName, email, password} = body;
@@ -45,6 +51,14 @@ exports.signUp = async (req, res) => {
     }
 
 }
+
+/**
+ * This function handles the user sign in request
+ * @param req
+ * @param res
+ * @param next
+ * @returns {Object<User> | Object<error>}
+ */
 exports.login = async (req, res, next) => {
 
     let {email, password} = req.body;
@@ -104,15 +118,15 @@ exports.getUserDetails = async (req, res) => {
     res.status(200).json(userInfo)
 }
 
+/**
+ *
+ * @param req
+ * @param res
+ * @param next
+ * @returns {Promise<void>}
+ */
 exports.updateDetails = async (req, res, next) => {
     const id = req.user.id
-
-    let newUserDetails = {
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        email: req.body.email
-    };
-
     let user = await User.updateUser(id, req.body)
 
     if (user) {
@@ -135,7 +149,6 @@ exports.updateDetails = async (req, res, next) => {
 exports.modifyPassword = async (req, res, next) => {
     const id = req.user.id
 
-    let user
     let {oldpassword, newpassword, confirmpassword} = data = req.body;
 
     if (utils.isPasswordMatch(newpassword, confirmpassword)) {
@@ -174,7 +187,6 @@ exports.modifyPassword = async (req, res, next) => {
 
         res.send(responseInfo)
     }
-
     next()
 }
 

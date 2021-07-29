@@ -6,7 +6,12 @@ const responseInfo = {
     message: ""
 }
 
-// Fetch All Product Of A Particular User
+/**
+ * This method fetches all the product of the current signed-in user
+ * @param req
+ * @param res
+ * @returns {Object<Product> | Object<error>}
+ */
 exports.getProducts = async (req, res) => {
 
     try {
@@ -35,7 +40,12 @@ exports.getProducts = async (req, res) => {
 
 }
 
-// Fetch Single Product
+/**
+ * This function fetches a single product from all the products of the current signed-in user
+ * @param req
+ * @param res
+ * @returns {Promise<void>}
+ */
 exports.getSingleProduct = async (req, res) => {
     let userid = req.user._id
     const productId = req.params.id
@@ -64,7 +74,12 @@ exports.getSingleProduct = async (req, res) => {
 
 }
 
-// Add New Products
+/**
+ * This method handles the add new product
+ * @param req
+ * @param res
+ * @returns {Object<Product> | Object<error>}
+ */
 exports.addProduct = async (req, res) => {
 
     try {
@@ -96,7 +111,14 @@ exports.addProduct = async (req, res) => {
     }
 }
 
-// Update Product
+
+/**
+ * This function finds a product by a specified request parameter ID,
+ * and update. The product has to be for the current signed-in user
+ * @param req
+ * @param res
+ * @returns {Object<Product> | Object<error>}
+ */
 exports.updateProduct = async (req, res) => {
     let productId = req.params.id
     const update = req.body
@@ -126,7 +148,13 @@ exports.updateProduct = async (req, res) => {
     }
 }
 
-// Delete Product
+/**
+ * This function finds a product by a specified request parameter ID,
+ * and deletes. The product has to be for the current signed-in user
+ * @param req
+ * @param res
+ * @returns {Object<success> | Object<error>}
+ */
 exports.deleteProduct = async (req, res) => {
     let productId = req.params.id;
     try {

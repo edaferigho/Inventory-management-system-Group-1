@@ -55,6 +55,7 @@ exports.fileStorageEngine = multer.diskStorage({
         cb(null, Date.now() + '--' + file.originalname)
     }
 })
+//studio1
 
 exports.isPasswordMatch = function (password, confirmPassword) {
     return password === confirmPassword;
